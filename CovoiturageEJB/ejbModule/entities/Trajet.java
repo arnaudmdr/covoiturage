@@ -21,14 +21,39 @@ public class Trajet {
 	@GeneratedValue
 	private int id;
 	
+	public enum TypeVehicule {
+		  Fourgonnette("Fourgonnette"),
+		  SUV("SUV"),
+		  Urbaine("Urbaine"),
+		  Compacte("Compacte"),
+		  Routiere("Routiere"),
+		  Break("Break");
+		
+		private final String text;
+
+	    private TypeVehicule(final String text) {
+	        this.text = text;
+	    }
+
+	    @Override
+	    public String toString() {
+	        return text;
+	    }
+	}
+	
+	private int nombrePlaces;
+	
+
 	@ManyToOne
 	@JoinTable (name="LienConducteurTrajet", 
 	joinColumns=@JoinColumn(name="TRAJET_ID"))
-	private Utilisateur conducteur;
+	private Conducteur conducteur;
 	
 	@ManyToMany
-	@JoinTable (name="LienPassagerTrajet")
-	private List<Utilisateur> passagers;
+	@JoinTable (name="LienPassagerTrajet",
+	joinColumns=@JoinColumn(name="trajet"),
+	inverseJoinColumns=@JoinColumn(name="passager"))
+	private List<Passager> passagers;
 	
 	@OneToOne
 	private Ville villeDepart;
@@ -49,18 +74,28 @@ public class Trajet {
 	public int getId() {
 		return id;
 	}
-	public Utilisateur getConducteur() {
+	
+	
+	public Conducteur getConducteur() {
 		return conducteur;
 	}
-	public void setConducteur(Utilisateur conducteur) {
+
+
+	public void setConducteur(Conducteur conducteur) {
 		this.conducteur = conducteur;
 	}
-	public List<Utilisateur> getPassagers() {
+
+
+	public List<Passager> getPassagers() {
 		return passagers;
 	}
-	public void setPassagers(List<Utilisateur> passagers) {
+
+
+	public void setPassagers(List<Passager> passagers) {
 		this.passagers = passagers;
 	}
+
+
 	public Ville getVilleDepart() {
 		return villeDepart;
 	}
@@ -96,6 +131,12 @@ public class Trajet {
 	}
 	public void setDateArrivee(Date dateArrivee) {
 		this.dateArrivee = dateArrivee;
+	}
+	public int getNombrePlaces() {
+		return nombrePlaces;
+	}
+	public void setNombrePlaces(int nombrePlaces) {
+		this.nombrePlaces = nombrePlaces;
 	}
 
 	
