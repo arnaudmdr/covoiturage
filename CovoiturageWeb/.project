@@ -3,6 +3,7 @@
 	<name>CovoiturageWeb</name>
 	<comment></comment>
 	<projects>
+		<project>CovoiturageEJB</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
