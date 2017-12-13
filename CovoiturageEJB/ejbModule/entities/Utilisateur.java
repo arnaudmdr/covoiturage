@@ -17,11 +17,6 @@ public class Utilisateur {
 	private String username;
 	private String password;
 	
-	/*
-	@OneToMany
-	private ArrayList<Trajet> trajetsConduit;
-	*/
-	
 	
 	
 	public int getId() {
