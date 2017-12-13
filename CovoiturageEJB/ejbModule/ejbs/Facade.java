@@ -20,7 +20,6 @@ public class Facade {
 		@PersistenceContext(unitName="monUnite")
 		EntityManager em;
 		
-		
 		//Recup liste trajets
 		public List<Trajet> getListeTrajets() {
 			Query q = em.createQuery("From Trajet t");			
