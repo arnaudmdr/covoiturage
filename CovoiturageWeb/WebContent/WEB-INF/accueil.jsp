@@ -11,12 +11,15 @@
 
 MDR
 
+<form method="post"> 
 <h1>Mes trajets</h1>
 <ul>
 	<c:forEach items="${listeTrajets}" var="t">
-		<li> ${t.villeDepart} -> ${t.villeArrivee} </li>
+		<li> ${t.villeDepart.nom} -> ${t.villeArrivee.nom} tarif : ${t.tarif} </li>
 	</c:forEach>
 </ul>
+<button type="submit" name="todo" value="proposer">Proposer un trajet</button>
+</form>
 
 
 

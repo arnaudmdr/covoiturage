@@ -2,10 +2,13 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -18,7 +21,7 @@ import javax.persistence.OneToOne;
 public class Trajet {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue (strategy=GenerationType.IDENTITY)
 	private int id;
 	private int nombrePlaces;
 	
@@ -30,7 +33,30 @@ public class Trajet {
 	@OneToOne
 	private Ville villeArrivee;
 	
+	// Pourquoi on fait pas etape juste comme ça ? 
+	// ArrayList<Ville> etapes;
+	// Map<Ville, Integer> hm = new HashMap<>();
+	
 	private int tarif;
+	
+	public Trajet() {
+		
+	}
+	
+	public Trajet(Ville villedepart, Ville villearrivee, int id, int nombreplaces, String typevoiture, int tarif) {
+		this.villeDepart = villedepart;
+		this.villeArrivee = villearrivee;
+		this.id = id;
+		this.tarif = tarif;
+		this.typeVoiture = typevoiture;
+		this.nombrePlaces = nombreplaces;
+	}
+	
+	
+	
+	//##############################################
+	//			Getters and Setters
+	//##############################################
 
 	public int getId() {
 		return id;
