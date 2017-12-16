@@ -27,7 +27,7 @@ Saisissez une ville d'arrivée :
 </select> 
 </p>
 <p>
-Saisissez un tarif : <input type="text" name="tarif"/>
+Saisissez un tarif : <input type="number" name="tarif"/>
 </p>
 <p>
 Saisissez un type de voiture : 
@@ -63,8 +63,8 @@ Saisissez un nombre de places :
 <ul>
 	<c:forEach items="${listeVilles}" var="v">
 	<p>
-		<input type="checkbox" name="etape" value=${v.nom}>${v.nom}
-		Saisissez un tarif : <input type="text" name=${v.nom}/>
+		<input type="checkbox" name="etape" value="${v.nom}">${v.nom}
+		Saisissez un tarif : <input type="number" name="${v.nom}"/>
 	</p>
 	</c:forEach>
 </ul>

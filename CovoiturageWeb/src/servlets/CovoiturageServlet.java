@@ -1,7 +1,9 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ejbs.Facade;
 import entities.Trajet;
+import entities.Ville;
 
 
 @WebServlet("/CovoiturageServlet")
@@ -71,9 +74,7 @@ public class CovoiturageServlet extends HttpServlet {
 		if (todotrajet!=null) {
 			switch (todotrajet) {
 			case "valider":
-				facade.addTrajet(request.getParameter("villedepart"), request.getParameter("villearrivee"),
-						Integer.parseInt(request.getParameter("nombreplaces")), request.getParameter("typevoiture"),
-						Integer.parseInt(request.getParameter("tarif")));
+				ajouterTrajet(request, response, currentLogin);
 				//On change de jsp et on passe sur la page proposer un trajet
 				break;
 			default:
@@ -90,6 +91,24 @@ public class CovoiturageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+	}
+	
+	
+	private void ajouterTrajet(HttpServletRequest request, HttpServletResponse response, String currentLogin) throws ServletException, IOException {
+		
+		String[] casesCochees = request.getParameterValues("etape");
+		Map<String, Integer> etapes = new HashMap<String, Integer>();
+		if (casesCochees!=null) {
+			for (String etapeVille : casesCochees) {
+				if (!request.getParameter(etapeVille).isEmpty())
+					etapes.put(etapeVille, Integer.parseInt(request.getParameter(etapeVille)));
+			}
+		}
+		if ( !request.getParameter("tarif").isEmpty() ) {
+			facade.addTrajet(currentLogin, request.getParameter("villedepart"), request.getParameter("villearrivee"),
+					Integer.parseInt(request.getParameter("nombreplaces")), request.getParameter("typevoiture"),
+					Integer.parseInt(request.getParameter("tarif")), etapes);
+		}
 	}
 	
 	private void generateListeTrajets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

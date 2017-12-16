@@ -1,6 +1,8 @@
 package ejbs;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -45,7 +47,7 @@ public class Facade {
 		
 
 		//Fonction pour proposer un nouveau trajet
-		public void addTrajet(String villedepart, String villearrivee, int nombreplaces, String typevoiture, int tarif) {
+		public void addTrajet(String username, String villedepart, String villearrivee, int nombreplaces, String typevoiture, int tarif, Map<String, Integer> etapes) {
 			
 			// ordre pour addTrajet : 
 			// Ville villedepart, Ville villearrivee, int id, int nombreplaces, String typevoiture, int tarif
@@ -65,8 +67,23 @@ public class Facade {
 			q2.setParameter("nomvillearrivee", villearrivee);
 			Ville va = (Ville) q2.getSingleResult();
 			
+			//On récupère l'utilisateur qui correspond au username
+			Query q3 = em.createQuery("From Utilisateur u where u.username=:username");
+			q3.setParameter("username", username);
+			Utilisateur u = (Utilisateur) q3.getSingleResult();
+			
+			Map<Ville, Integer> etapesVilles = new HashMap<Ville, Integer>();
+			for (String etapeVille : etapes.keySet()) {
+				Query q4 = em.createQuery("From Ville v where v.nom=:nomville");
+				q4.setParameter("nomville", etapeVille);
+				Ville v = (Ville) q4.getSingleResult();
+				etapesVilles.put(v, etapes.get(etapeVille));
+			}
+			
 			//On ajoute dans la base
-			Trajet t = new Trajet(vd, va, max+1, nombreplaces, typevoiture, tarif);
+			Trajet t = new Trajet(u, vd, va, max+1, nombreplaces, typevoiture, tarif);
+			t.setEtapes(etapesVilles);
+			
 			Trajet trajet_attach = em.merge(t); //Il faut synchroniser dans la base l'entity détachée
 			
 		}

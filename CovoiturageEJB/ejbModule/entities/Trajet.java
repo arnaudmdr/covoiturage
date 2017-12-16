@@ -30,6 +30,9 @@ public class Trajet {
 	private int id;
 	private int nombrePlaces;
 	
+	@ManyToOne
+	private Utilisateur conducteur;
+	
 	private String typeVoiture;
 	
 	@OneToOne
@@ -45,7 +48,7 @@ public class Trajet {
 	
 	//HashMap Ville -> Tarif
 	@ElementCollection
-	@CollectionTable(name="ETAPES", joinColumns=@JoinColumn(name="ETAPE_ID"))
+	@CollectionTable(name="ETAPES", joinColumns=@JoinColumn(name="TRAJET_ID"))
 	@Column(name="TARIF")
 	@MapKeyJoinColumn(name="VILLE_ID")
 	private Map<Ville, Integer> etapes = new HashMap<>();
@@ -63,13 +66,14 @@ public class Trajet {
 		
 	}
 	
-	public Trajet(Ville villedepart, Ville villearrivee, int id, int nombreplaces, String typevoiture, int tarif) {
+	public Trajet(Utilisateur conducteur, Ville villedepart, Ville villearrivee, int id, int nombreplaces, String typevoiture, int tarif) {
 		this.villeDepart = villedepart;
 		this.villeArrivee = villearrivee;
 		this.id = id;
 		this.tarif = tarif;
 		this.typeVoiture = typevoiture;
 		this.nombrePlaces = nombreplaces;
+		this.conducteur = conducteur;
 	}
 	
 	
@@ -77,6 +81,30 @@ public class Trajet {
 	//##############################################
 	//			Getters and Setters
 	//##############################################
+
+	public Utilisateur getConducteur() {
+		return conducteur;
+	}
+
+	public void setConducteur(Utilisateur conducteur) {
+		this.conducteur = conducteur;
+	}
+
+	public Map<Utilisateur, Ville> getPassagerville() {
+		return passagerville;
+	}
+
+	public void setPassagerville(Map<Utilisateur, Ville> passagerville) {
+		this.passagerville = passagerville;
+	}
+
+	public Map<Ville, Integer> getEtapes() {
+		return etapes;
+	}
+
+	public void setEtapes(Map<Ville, Integer> etapes) {
+		this.etapes = etapes;
+	}
 
 	public int getId() {
 		return id;
