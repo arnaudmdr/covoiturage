@@ -12,7 +12,7 @@
 MDR
 
 <form method="post"> 
-<h1>Mes trajets</h1>
+<h1>Liste des trajets disponibles</h1>
 <ul>
 	<c:forEach items="${listeTrajets}" var="t">
 		<li> ${t.villeDepart.nom} -> ${t.villeArrivee.nom} tarif : ${t.tarif} </li>

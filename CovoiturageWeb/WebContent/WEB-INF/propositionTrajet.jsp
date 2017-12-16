@@ -12,32 +12,18 @@
 <form method="post">
 <p>
 Saisissez une ville de départ :
-<select name="villedepart"> 
-   <option>Marseille</option> 
-   <option>Dijon</option> 
-   <option>Bourges</option> 
-   <option>Paris</option> 
-   <option>Rouen</option> 
-   <option>Rennes</option> 
-   <option>Lorient</option> 
-   <option>Chaville</option> 
-   <option>Saint-Etienne</option> 
-   <option selected="selected">Lyon</option>
+<select name="villedepart">
+   <c:forEach items="${listeVilles}" var="v">
+		<option> ${v.nom} </option>
+	</c:forEach>
 </select> 
 </p>
 <p>
 Saisissez une ville d'arrivée : 
 <select name="villearrivee"> 
-   <option>Marseille</option> 
-   <option>Dijon</option> 
-   <option selected="selected">Bourges</option> 
-   <option>Paris</option> 
-   <option>Rouen</option> 
-   <option>Rennes</option> 
-   <option>Lorient</option> 
-   <option>Chaville</option> 
-   <option>Saint-Etienne</option> 
-   <option>Lyon</option>
+   <c:forEach items="${listeVilles}" var="v">
+		<option> ${v.nom} </option>
+	</c:forEach>
 </select> 
 </p>
 <p>
@@ -70,6 +56,21 @@ Saisissez un nombre de places :
    <option>Abuse pas frère</option> 
 </select>
 </p> 
+
+
+<p>
+<h1>Etapes</h1>
+<ul>
+	<c:forEach items="${listeVilles}" var="v">
+	<p>
+		<input type="checkbox" name="etape" value=${v.nom}>${v.nom}
+		Saisissez un tarif : <input type="text" name=${v.nom}/>
+	</p>
+	</c:forEach>
+</ul>
+</p>
+
+
 <button type="submit" name="todotrajet" value="valider">Valider</button>
 </form>
 

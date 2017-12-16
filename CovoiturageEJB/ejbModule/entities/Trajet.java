@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -29,6 +34,21 @@ public class Trajet {
 	
 	@OneToOne
 	private Ville villeDepart;
+	
+	//HashMap Passager -> Ville d'arrivée
+	@ManyToMany
+	@JoinTable(name="PASSAGER_VILLE",
+		joinColumns=@JoinColumn(name="TRAJET"),
+		inverseJoinColumns=@JoinColumn(name="VILLE"))
+	@MapKeyJoinColumn(name="UTILISATEUR")
+	private Map<Utilisateur, Ville> passagerville = new HashMap<>();
+	
+	//HashMap Ville -> Tarif
+	@ElementCollection
+	@CollectionTable(name="ETAPES", joinColumns=@JoinColumn(name="ETAPE_ID"))
+	@Column(name="TARIF")
+	@MapKeyJoinColumn(name="VILLE_ID")
+	private Map<Ville, Integer> etapes = new HashMap<>();
 	
 	@OneToOne
 	private Ville villeArrivee;

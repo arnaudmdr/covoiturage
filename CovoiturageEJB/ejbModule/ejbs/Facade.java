@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import entities.Trajet;
+import entities.Utilisateur;
 import entities.Ville;
 
 /**
@@ -27,6 +28,23 @@ public class Facade {
 			return q.getResultList();
 		}
 		
+		
+		public boolean Connexion(String username, String password) {
+			Utilisateur user = em.find(Utilisateur.class, username);
+			if(user!=null && (user.getPassword().equals(password))) {
+				return true;
+			}
+			return false;
+		}
+		
+		public List<Ville> getVilles() {
+			Query q = em.createQuery("From Ville v");
+			System.out.println(q.getResultList());
+			return q.getResultList();
+		}
+		
+
+		//Fonction pour proposer un nouveau trajet
 		public void addTrajet(String villedepart, String villearrivee, int nombreplaces, String typevoiture, int tarif) {
 			
 			// ordre pour addTrajet : 

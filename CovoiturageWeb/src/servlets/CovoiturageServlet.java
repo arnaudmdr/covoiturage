@@ -13,9 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import ejbs.Facade;
 import entities.Trajet;
 
-/**
- * Servlet implementation class CovoiturageServlet
- */
+
 @WebServlet("/CovoiturageServlet")
 public class CovoiturageServlet extends HttpServlet {
 	
@@ -26,15 +24,38 @@ public class CovoiturageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		//Afficher toutes les offres de covoiturage	
-		
-		
 		String todo = request.getParameter("todo");
+		
+		String currentLogin = (String)request.getSession().getAttribute("username");
+		if (currentLogin==null) {
+			if ((todo!=null) && (todo.equals("connect"))) {
+				//test connexion
+				String login=(String)request.getParameter("username");
+				String password=(String)request.getParameter("password");
+				
+				if (facade.Connexion(login, password)) {
+					request.getSession().setAttribute("username", login);
+					generateListeTrajets(request, response);
+					return;
+				}
+			}
+			
+			//sinon on renvoie sur la page de connexion
+			request.getRequestDispatcher("/WEB-INF/connexion.jsp").forward(request, response);
+				
+			return;
+		}
+		
+		
+		
+		
 		String todotrajet = request.getParameter("todotrajet");
 		
 		//On regarde les cas où on se trouve sur la première page, accueil.jsp
 		if (todo!=null) {
 			switch (todo) {
 			case "proposer":
+				request.setAttribute("listeVilles", facade.getVilles());
 				//On change de jsp et on passe sur la page proposer un trajet
 				request.getRequestDispatcher("/WEB-INF/propositionTrajet.jsp").forward(request, response);
 				break;
@@ -60,16 +81,20 @@ public class CovoiturageServlet extends HttpServlet {
 			}
 		}
 		
-		
-		request.setAttribute("listeTrajets", facade.getListeTrajets());
-		request.getRequestDispatcher("WEB-INF/accueil.jsp").forward(request, response);
-		
+		generateListeTrajets(request, response);
 	}
+	
+
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+	}
+	
+	private void generateListeTrajets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("listeTrajets", facade.getListeTrajets());
+		request.getRequestDispatcher("WEB-INF/accueil.jsp").forward(request, response);
 	}
 
 }

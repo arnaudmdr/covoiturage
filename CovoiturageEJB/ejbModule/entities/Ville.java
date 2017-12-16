@@ -8,13 +8,8 @@ import javax.persistence.Id;
 public class Ville {
 	
 	@Id
-	@GeneratedValue
-	private int id;
 	private String nom;
 	
-	public int getId() {
-		return id;
-	}
 	
 	public String getNom() {
 		return nom;
