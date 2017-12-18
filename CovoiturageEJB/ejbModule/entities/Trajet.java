@@ -10,6 +10,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +22,8 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.sun.istack.internal.Nullable;
 
 @Entity
 public class Trajet {
@@ -38,13 +41,12 @@ public class Trajet {
 	@OneToOne
 	private Ville villeDepart;
 	
-	//HashMap Passager -> Ville d'arrivée
-	@ManyToMany
-	@JoinTable(name="PASSAGER_VILLE",
-		joinColumns=@JoinColumn(name="TRAJET"),
-		inverseJoinColumns=@JoinColumn(name="VILLE"))
-	@MapKeyJoinColumn(name="UTILISATEUR")
-	private Map<Utilisateur, Ville> passagerville = new HashMap<>();
+	@OneToMany
+	@JoinColumn(nullable=true)
+	private List<Reservation> reservations;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	private List<Reservation> demandes;
 	
 	//HashMap Ville -> Tarif
 	@ElementCollection
@@ -82,20 +84,23 @@ public class Trajet {
 	//			Getters and Setters
 	//##############################################
 
+	
+	
 	public Utilisateur getConducteur() {
 		return conducteur;
+	}
+	
+
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 
 	public void setConducteur(Utilisateur conducteur) {
 		this.conducteur = conducteur;
-	}
-
-	public Map<Utilisateur, Ville> getPassagerville() {
-		return passagerville;
-	}
-
-	public void setPassagerville(Map<Utilisateur, Ville> passagerville) {
-		this.passagerville = passagerville;
 	}
 
 	public Map<Ville, Integer> getEtapes() {
@@ -109,7 +114,16 @@ public class Trajet {
 	public int getId() {
 		return id;
 	}
+	
 
+
+	public List<Reservation> getDemandes() {
+		return demandes;
+	}
+
+	public void setDemandes(List<Reservation> demandes) {
+		this.demandes = demandes;
+	}
 
 	public int getNombrePlaces() {
 		return nombrePlaces;

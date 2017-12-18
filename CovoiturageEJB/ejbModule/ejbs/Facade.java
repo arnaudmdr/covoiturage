@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import entities.Reservation;
 import entities.Trajet;
 import entities.Utilisateur;
 import entities.Ville;
@@ -118,17 +119,54 @@ public class Facade {
 				t.setNombrePlaces(nPlaces-nombrePlaces);
 				
 				//Mise a jour de la HM des passagers
-				Map<Utilisateur, Ville> passagers = t.getPassagerville();
-				for (int i = 0; i < nombrePlaces; i++) {
-					passagers.put(user, va);				
-				}
+				List<Reservation> reservations = t.getReservations();
 				
-				t.setPassagerville(passagers);
-								
+				//Creation de reservation correspondant au passager et sauv ds la base
+				Reservation r = new Reservation(user,nombrePlaces,va);				
+				Reservation rAttach = em.merge(r);			
+				
+				reservations.add(rAttach);
+				
+				t.setReservations(reservations);											
 				return true;
-			}
-			
+			}		
 		}
+		
+		public boolean envoyerDemande(String username, int trajetId, int nombrePlaces, String villeArrivee) {
+			Trajet t = getTrajet(trajetId);
+			
+			//User
+			Utilisateur user = em.find(Utilisateur.class, username);
+					
+			//Ville arrivée
+			Query q2 = em.createQuery("From Ville v where v.nom=:nomvillearrivee");
+			q2.setParameter("nomvillearrivee", villeArrivee);
+			Ville va = (Ville) q2.getSingleResult();
+			
+			
+			
+			//Modification nb places
+			int nPlaces = t.getNombrePlaces();
+			
+			//Erreur on veut reserver + de places qu'il y en a
+			if (nPlaces < nombrePlaces) {
+				return false;
+			} else {	
+				//Mise a jour de la HM des passagers
+				List<Reservation> demandes = t.getDemandes();
+				
+				//Creation de reservation correspondant au passager et sauv ds la base
+				Reservation r = new Reservation(user,nombrePlaces,va);				
+				Reservation rAttach = em.merge(r);			
+				
+				demandes.add(rAttach);
+				
+				t.setReservations(demandes);											
+				return true;
+			}		
+		}
+		
+		
 		
 		public List<Ville> getEtapes(int trajetId) {
 			Trajet t = getTrajet(trajetId);
@@ -137,6 +175,17 @@ public class Facade {
 			ArrayList<Ville> listeEtapes = new ArrayList<Ville>(etapes.keySet());
 			listeEtapes.add(t.getVilleArrivee());
 			return listeEtapes;		
+		}
+		
+		//Liste des trajets en tant que conducteur
+		public List<Trajet> getTrajetsConducteur(String username) {
+			
+			//User
+			Utilisateur conducteur = em.find(Utilisateur.class, username);
+			//Trajets en tant que conducteur
+			Query q = em.createQuery("From Trajet t where t.conducteur=:conducteur");
+			q.setParameter("conducteur", conducteur);
+			return q.getResultList();			
 		}
 		
 		

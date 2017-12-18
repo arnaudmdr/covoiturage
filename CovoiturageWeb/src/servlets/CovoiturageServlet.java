@@ -44,7 +44,7 @@ public class CovoiturageServlet extends HttpServlet {
 				
 				if (facade.Connexion(login, password)) {
 					request.getSession().setAttribute("username", login);
-					generateListeTrajets(request, response);
+					generateListeTrajets(request, response, login);
 					return;
 				}
 			}
@@ -83,11 +83,7 @@ public class CovoiturageServlet extends HttpServlet {
 			request.setAttribute("trajet", facade.getTrajet(idTrajet));
 			request.setAttribute("listeEtapes", facade.getEtapes(idTrajet));
 			request.getRequestDispatcher("/WEB-INF/reserverTrajet.jsp").forward(request, response);
-			
-			//Nombre de places à reserver
-			//int nombrePlaces = Integer.parseInt(request.getParameter(reserver));
-					
-			//facade.reserverTrajet(currentLogin, idTrajet, nombrePlaces);		
+			return;
 		}
 		
 		//Reservation de trajet validée en cliquant
@@ -97,7 +93,7 @@ public class CovoiturageServlet extends HttpServlet {
 			//Nombre de places à reserver
 			int nombrePlaces = Integer.parseInt(request.getParameter(validerReservation));
 			String villeArrivee = request.getParameter("villearrivee");
-			facade.reserverTrajet(currentLogin, idTrajet, nombrePlaces, villeArrivee);		
+			facade.envoyerDemande(currentLogin, idTrajet, nombrePlaces, villeArrivee);		
 		}
 
 		
@@ -113,7 +109,7 @@ public class CovoiturageServlet extends HttpServlet {
 			}
 		}
 		
-		generateListeTrajets(request, response);
+		generateListeTrajets(request, response, currentLogin);
 	}
 	
 
@@ -142,8 +138,10 @@ public class CovoiturageServlet extends HttpServlet {
 		}
 	}
 	
-	private void generateListeTrajets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void generateListeTrajets(HttpServletRequest request, HttpServletResponse response, String username) throws ServletException, IOException {
+		request.setAttribute("listeTrajetsConducteur", facade.getTrajetsConducteur(username));
 		request.setAttribute("listeTrajets", facade.getListeTrajets());
+		
 		request.getRequestDispatcher("WEB-INF/accueil.jsp").forward(request, response);
 	}
 
