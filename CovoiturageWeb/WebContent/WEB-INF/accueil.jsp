@@ -9,16 +9,19 @@
 </head>
 <body>
 
-MDR
-
 <form method="post"> 
-<h1>Liste des trajets disponibles</h1>
-<ul>
-	<c:forEach items="${listeTrajets}" var="t">
-		<li> ${t.villeDepart.nom} -> ${t.villeArrivee.nom} tarif : ${t.tarif} </li>
-	</c:forEach>
-</ul>
-<button type="submit" name="todo" value="proposer">Proposer un trajet</button>
+	<h1>Liste des trajets disponibles</h1>
+	<ul>
+		<c:forEach items="${listeTrajets}" var="t">
+			<li> ${t.villeDepart.nom} -> ${t.villeArrivee.nom} tarif : ${t.tarif} </br>
+			Nombre de places restantes : ${t.nombrePlaces}		
+			</li>
+			<button type="submit" name="reserver" value="${t.id}">Réserver le trajet</button>
+		</c:forEach>
+	</ul>
+</form>
+<form method="post"> 
+	<button type="submit" name="todo" value="proposer">Proposer un trajet</button>
 </form>
 
 

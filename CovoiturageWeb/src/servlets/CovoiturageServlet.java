@@ -29,6 +29,12 @@ public class CovoiturageServlet extends HttpServlet {
 		//Afficher toutes les offres de covoiturage	
 		String todo = request.getParameter("todo");
 		
+		//Bouton reserver un trajet
+		String reserver = request.getParameter("reserver");
+		
+		//Bouton valider reservation
+		String validerReservation = request.getParameter("validerReservation");
+		
 		String currentLogin = (String)request.getSession().getAttribute("username");
 		if (currentLogin==null) {
 			if ((todo!=null) && (todo.equals("connect"))) {
@@ -62,11 +68,36 @@ public class CovoiturageServlet extends HttpServlet {
 				//On change de jsp et on passe sur la page proposer un trajet
 				request.getRequestDispatcher("/WEB-INF/propositionTrajet.jsp").forward(request, response);
 				break;
+				
+			
 			default:
 				break;
 			}
 			
 			return;
+		}
+		
+		//Passage a la page de reservation d'un trajet
+		if (reserver!=null) {
+			int idTrajet = Integer.parseInt(reserver);
+			request.setAttribute("trajet", facade.getTrajet(idTrajet));
+			request.setAttribute("listeEtapes", facade.getEtapes(idTrajet));
+			request.getRequestDispatcher("/WEB-INF/reserverTrajet.jsp").forward(request, response);
+			
+			//Nombre de places à reserver
+			//int nombrePlaces = Integer.parseInt(request.getParameter(reserver));
+					
+			//facade.reserverTrajet(currentLogin, idTrajet, nombrePlaces);		
+		}
+		
+		//Reservation de trajet validée en cliquant
+		if (validerReservation!=null) {
+			int idTrajet = Integer.parseInt(validerReservation);
+			
+			//Nombre de places à reserver
+			int nombrePlaces = Integer.parseInt(request.getParameter(validerReservation));
+			String villeArrivee = request.getParameter("villearrivee");
+			facade.reserverTrajet(currentLogin, idTrajet, nombrePlaces, villeArrivee);		
 		}
 
 		

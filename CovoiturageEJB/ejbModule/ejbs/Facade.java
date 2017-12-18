@@ -1,5 +1,6 @@
 package ejbs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,4 +87,57 @@ public class Facade {
 			Trajet trajet_attach = em.merge(t); //Il faut synchroniser dans la base l'entity détachée
 			
 		}
+		
+		public Trajet getTrajet(int trajetId) {
+			Query q = em.createQuery("From Trajet t where t.id=:trajetId");
+			q.setParameter("trajetId", trajetId);	
+			return (Trajet) q.getSingleResult();	
+		}
+		
+		public boolean reserverTrajet(String username, int trajetId, int nombrePlaces, String villeArrivee) {
+			Trajet t = getTrajet(trajetId);
+			
+			//User
+			Utilisateur user = em.find(Utilisateur.class, username);
+					
+			//Ville arrivée
+			Query q2 = em.createQuery("From Ville v where v.nom=:nomvillearrivee");
+			q2.setParameter("nomvillearrivee", villeArrivee);
+			Ville va = (Ville) q2.getSingleResult();
+			
+			
+			
+			//Modification nb places
+			int nPlaces = t.getNombrePlaces();
+			
+			//Erreur on veut reserver + de places qu'il y en a
+			if (nPlaces < nombrePlaces) {
+				return false;
+			} else {
+				//Nv nombre de places
+				t.setNombrePlaces(nPlaces-nombrePlaces);
+				
+				//Mise a jour de la HM des passagers
+				Map<Utilisateur, Ville> passagers = t.getPassagerville();
+				for (int i = 0; i < nombrePlaces; i++) {
+					passagers.put(user, va);				
+				}
+				
+				t.setPassagerville(passagers);
+								
+				return true;
+			}
+			
+		}
+		
+		public List<Ville> getEtapes(int trajetId) {
+			Trajet t = getTrajet(trajetId);
+			Map<Ville,Integer> etapes = t.getEtapes();
+			
+			ArrayList<Ville> listeEtapes = new ArrayList<Ville>(etapes.keySet());
+			listeEtapes.add(t.getVilleArrivee());
+			return listeEtapes;		
+		}
+		
+		
 }
