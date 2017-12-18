@@ -41,7 +41,6 @@ public class Facade {
 		
 		public List<Ville> getVilles() {
 			Query q = em.createQuery("From Ville v");
-			System.out.println(q.getResultList());
 			return q.getResultList();
 		}
 		
