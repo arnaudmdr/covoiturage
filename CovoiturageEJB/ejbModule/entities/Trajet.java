@@ -110,7 +110,6 @@ public class Trajet {
 		return id;
 	}
 
-
 	public int getNombrePlaces() {
 		return nombrePlaces;
 	}
