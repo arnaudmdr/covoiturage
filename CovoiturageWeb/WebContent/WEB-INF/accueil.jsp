@@ -8,6 +8,21 @@
 <title>Covoiturage</title>
 </head>
 <body>
+<form method="post"> 
+	<h1>Liste de demandes</h1>
+	<ul>
+		<c:forEach items="${listeTrajetsConducteur}" var="t">
+				<c:forEach items="${t.demandes}" var="d">
+					<li>
+						${t.villeDepart.nom} -> ${t.villeArrivee.nom} </br>
+						
+						${d.utilisateur.username} : ${d.villeArrivee.nom} : ${d.placesReservees}
+					</li>		
+				</c:forEach>
+		</c:forEach>
+	</ul>
+</form>
+
 
 <form method="post"> 
 	<h1>Liste des trajets disponibles</h1>
