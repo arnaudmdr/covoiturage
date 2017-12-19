@@ -22,7 +22,7 @@ public class CovoiturageServlet extends HttpServlet {
 	
 	@EJB 
 	private Facade facade;
-
+	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -43,6 +43,13 @@ public class CovoiturageServlet extends HttpServlet {
 				String password=(String)request.getParameter("password");
 				
 				if (facade.Connexion(login, password)) {
+					
+					if (login.equals("admin")) {
+						request.getSession().setAttribute("username", login);
+						//si admin, on dispatch sur la jsp correspondante
+						generateAdmin(request, response);
+						return;
+					}
 					request.getSession().setAttribute("username", login);
 					generateListeTrajets(request, response, login);
 					return;
@@ -56,6 +63,41 @@ public class CovoiturageServlet extends HttpServlet {
 		}
 		
 		
+		//*******************************************************************************
+		//Cas où on est admin
+		if (currentLogin.equals("admin")) {
+			
+			String action = request.getParameter("admin");
+			if (action!=null) {
+				switch (action) {
+				case "ajouterville":
+					//On peut ajouter des villes 
+					if (request.getParameter("newville")!=null)
+					{
+						String newville = request.getParameter("newville");
+						facade.addVille(newville);
+						generateAdmin(request, response);
+						//facade.addville(newville);
+					}
+					break;
+				case "ajoutergabarit":
+					if (request.getParameter("newgabarit")!=null)
+					{
+						//On peut aussi ajouter des nouveaux gabarits de véhicules
+						String newgabarit = request.getParameter("newgabarit");
+						facade.addGabarit(newgabarit);
+						generateAdmin(request, response);
+						//facade.addGabarit(newgabarit);
+					}
+					break;
+				default:
+					break;
+				}	
+			}
+			
+			return;
+		}
+		//*******************************************************************************
 		
 		
 		String todotrajet = request.getParameter("todotrajet");
@@ -65,11 +107,10 @@ public class CovoiturageServlet extends HttpServlet {
 			switch (todo) {
 			case "proposer":
 				request.setAttribute("listeVilles", facade.getVilles());
+				request.setAttribute("listeTypeVehicule", facade.getListeGabarits());
 				//On change de jsp et on passe sur la page proposer un trajet
 				request.getRequestDispatcher("/WEB-INF/propositionTrajet.jsp").forward(request, response);
 				break;
-				
-			
 			default:
 				break;
 			}
@@ -133,8 +174,6 @@ public class CovoiturageServlet extends HttpServlet {
 		
 		generateListeTrajets(request, response, currentLogin);
 	}
-	
-
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -160,6 +199,12 @@ public class CovoiturageServlet extends HttpServlet {
 					Integer.parseInt(request.getParameter("mois")), Integer.parseInt(request.getParameter("heure")),
 					Integer.parseInt(request.getParameter("minutes")));
 		}
+	}
+	
+	private void generateAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("listeVilles", facade.getVilles());
+		request.setAttribute("listeGabarits", facade.getListeGabarits());
+		request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
 	}
 	
 	private void generateListeTrajets(HttpServletRequest request, HttpServletResponse response, String username) throws ServletException, IOException {

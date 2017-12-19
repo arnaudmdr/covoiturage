@@ -1,6 +1,7 @@
 package ejbs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import com.sun.nio.file.SensitivityWatchEventModifier;
 
 import entities.Reservation;
 import entities.Trajet;
@@ -26,6 +29,11 @@ public class Facade {
 	
 		@PersistenceContext(unitName="monUnite")
 		EntityManager em;
+		
+		//initialisation de la liste de gabarits
+		private ArrayList<String> listeGabarits = new ArrayList<String>(
+				Arrays.asList("SUV", "Fourgonnette","Break","Urbaine","Petite","Grande","Moche mais pratique"));
+		
 		
 		//Recup liste trajets
 		public List<Trajet> getListeTrajets() {
@@ -209,6 +217,27 @@ public class Facade {
 			q.setParameter("conducteur", conducteur);
 			return q.getResultList();			
 		}
+		
+		public void addVille(String ville) {
+			Ville v= new Ville(ville);
+			Ville vattach = em.merge(v);
+		}
+		
+		public void addGabarit(String gabarit) {
+			listeGabarits.add(gabarit);
+		}
+
+
+		public ArrayList<String> getListeGabarits() {
+			return listeGabarits;
+		}
+
+
+		public void setListeGabarits(ArrayList<String> listeGabarits) {
+			this.listeGabarits = listeGabarits;
+		}
+		
+	
 		
 		
 }

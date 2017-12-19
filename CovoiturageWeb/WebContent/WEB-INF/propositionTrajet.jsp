@@ -30,17 +30,11 @@ Saisissez une ville d'arrivée :
 Saisissez un tarif : <input type="number" name="tarif"/>
 </p>
 <p>
-Saisissez un type de voiture : 
-<select name="typevoiture"> 
-   <option>SUV</option> 
-   <option>Fourgonnette</option> 
-   <option selected="selected">Break</option> 
-   <option>Mdr</option> 
-   <option>Urbaine</option> 
-   <option>Petite</option> 
-   <option>Grande</option> 
-   <option>Moche mais pratique</option> 
-   <option>Très grosse (cmb)</option> 
+Saisissez un type de véhicule : 
+<select name="typevoiture">
+   <c:forEach items="${listeTypeVehicule}" var="tv">
+		<option> ${tv} </option>
+	</c:forEach>
 </select>
 </p>
 <p>

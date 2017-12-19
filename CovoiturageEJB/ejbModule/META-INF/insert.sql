@@ -1,5 +1,6 @@
 insert into utilisateur (username, password) values ('toto', 'toto');
 insert into utilisateur (username, password) values ('jean', 'jean');
+insert into utilisateur (username, password) values ('admin', 'admin');
 
 insert into ville (nom) values ('Lyon');
 insert into ville (nom) values ('Bourges');
