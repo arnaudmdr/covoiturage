@@ -52,7 +52,7 @@ public class Trajet {
 	
 
 	//HashMap Ville -> Tarif
-	@ElementCollection
+	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name="ETAPES", joinColumns=@JoinColumn(name="TRAJET_ID"))
 	@Column(name="TARIF")
 	@MapKeyJoinColumn(name="VILLE_ID")

@@ -36,7 +36,7 @@ public class CovoiturageServlet extends HttpServlet {
 		String validerReservation = request.getParameter("validerReservation");
 		
 		String currentLogin = (String)request.getSession().getAttribute("username");
-		if (currentLogin==null) {
+		if (currentLogin==null || currentLogin=="") {
 			if ((todo!=null) && (todo.equals("connect"))) {
 				//test connexion
 				String login=(String)request.getParameter("username");
@@ -69,7 +69,11 @@ public class CovoiturageServlet extends HttpServlet {
 				request.getRequestDispatcher("/WEB-INF/propositionTrajet.jsp").forward(request, response);
 				break;
 				
-			
+			case "deconnexion":
+				request.getSession().setAttribute("username", "");
+				request.getRequestDispatcher("/WEB-INF/connexion.jsp").forward(request, response);
+				break;	
+				
 			default:
 				break;
 			}
@@ -164,7 +168,11 @@ public class CovoiturageServlet extends HttpServlet {
 	
 	private void generateListeTrajets(HttpServletRequest request, HttpServletResponse response, String username) throws ServletException, IOException {
 		request.setAttribute("listeTrajetsConducteur", facade.getTrajetsConducteur(username));
+		request.setAttribute("listeTrajetsPassager", facade.getTrajetsPassager(username));
+		
 		request.setAttribute("listeTrajets", facade.getListeTrajets());
+		
+		request.setAttribute("username", username);
 		
 		request.getRequestDispatcher("WEB-INF/accueil.jsp").forward(request, response);
 	}

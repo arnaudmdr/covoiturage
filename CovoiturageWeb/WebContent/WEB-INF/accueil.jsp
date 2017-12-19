@@ -10,6 +10,8 @@
 <body>
 
 
+
+
 <c:if test="${not empty demandeErreur}">
     ${demandeErreur}
 </c:if>
@@ -18,9 +20,14 @@
     ${reservationEffectuee}
 </c:if>
 
+<form method="post"> 
+	<button type="submit" name="todo" value="deconnexion">Déconnexion</button>
+</form>
+
+<h1>Bonjour ${username}</h1>
 
 <form method="post"> 
-	<h1>Liste de demandes</h1>
+	<h3>Liste de demandes</h1>
 	<ul>
 		<c:forEach items="${listeTrajetsConducteur}" var="t">
 				<c:forEach items="${t.demandes}" var="d">
@@ -40,15 +47,46 @@
 	</ul>
 </form>
 
+<h2>Liste des trajets où je conduis</h1>
+<ul>
+	<c:forEach items="${listeTrajetsConducteur}" var="t">
+			
+		<li>
+			${t.villeDepart.nom} -> ${t.villeArrivee.nom} </br>						
+		</li>		
+	</c:forEach>
+</ul>
+
+<h2>Liste des trajets où je suis passager</h1>
+<ul>
+
+	<c:forEach items="${listeTrajetsPassager}" var="entry">
+		<li>
+			${entry.value.villeDepart.nom} -> ${entry.key.villeArrivee.nom} </br>
+			Nombre de places reservees : ${entry.key.placesReservees} </br>
+			
+    	</li>
+	</c:forEach>
+	
+</ul>
+
+
 
 <form method="post"> 
 	<h1>Liste des trajets disponibles</h1>
 	<ul>
 		<c:forEach items="${listeTrajets}" var="t">
-			<li> ${t.villeDepart.nom} -> ${t.villeArrivee.nom} tarif : ${t.tarif} </br>
-			Nombre de places restantes : ${t.nombrePlaces}	
-			Date de départ : Le ${t.date.date}/${t.date.month} à ${t.date.hours}h${t.date.minutes}
+			<li> ${t.villeDepart.nom} -> ${t.villeArrivee.nom} tarif : ${t.tarif}€ </br>
+			Nombre de places restantes : ${t.nombrePlaces} </br>
+			Date de départ : Le ${t.date.date}/${t.date.month} à ${t.date.hours}h${t.date.minutes} </br>
+			Etapes : </br>
+			<c:forEach items="${t.etapes}" var="entry">
+    			${entry.key.nom}, Tarif : ${entry.value}€<br>
+			</c:forEach>
+			Conducteur : ${t.conducteur.username} </br>
+			Type de voiture : ${t.typeVoiture} </br>		
 			</li>
+			</br>
 			<button type="submit" name="reserver" value="${t.id}">Réserver le trajet</button>
 		</c:forEach>
 	</ul>
