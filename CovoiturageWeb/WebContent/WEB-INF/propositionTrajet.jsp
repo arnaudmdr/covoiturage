@@ -58,6 +58,41 @@ Saisissez un nombre de places :
 </p> 
 
 
+
+<p>
+Date : 
+	<p>
+	Jour : 
+	<select name="jour"> 
+	   <c:forEach begin="1" end="31" var="j">
+			<option>${j}</option> 
+		</c:forEach>
+	</select>
+	Mois : 
+	<select name="mois"> 
+	   <c:forEach begin="1" end="12" var="m">
+			<option>${m}</option> 
+		</c:forEach>
+	</select>
+	</p>
+</p>
+<p>
+Horaire : 
+	<p>
+	Heure :  
+	<select name="heure"> 
+	   <c:forEach begin="0" end="23" var="h">
+			<option>${h}</option> 
+		</c:forEach>
+	</select>
+	Minutes : 
+	<select name="minutes"> 
+	   <c:forEach begin="0" end="59" var="min">
+			<option>${min}</option> 
+		</c:forEach>
+	</select>
+	</p>
+</p>
 <p>
 <h1>Etapes</h1>
 <ul>

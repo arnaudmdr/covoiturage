@@ -48,6 +48,9 @@ public class Trajet {
 	@OneToMany(fetch=FetchType.EAGER)
 	private List<Reservation> demandes;
 	
+	private Date date;
+	
+
 	//HashMap Ville -> Tarif
 	@ElementCollection
 	@CollectionTable(name="ETAPES", joinColumns=@JoinColumn(name="TRAJET_ID"))
@@ -68,7 +71,8 @@ public class Trajet {
 		
 	}
 	
-	public Trajet(Utilisateur conducteur, Ville villedepart, Ville villearrivee, int id, int nombreplaces, String typevoiture, int tarif) {
+	@SuppressWarnings("deprecation")
+	public Trajet(Utilisateur conducteur, Ville villedepart, Ville villearrivee, int id, int nombreplaces, String typevoiture, int tarif, int jour, int mois, int heure, int minutes) {
 		this.villeDepart = villedepart;
 		this.villeArrivee = villearrivee;
 		this.id = id;
@@ -76,6 +80,8 @@ public class Trajet {
 		this.typeVoiture = typevoiture;
 		this.nombrePlaces = nombreplaces;
 		this.conducteur = conducteur;
+		this.date=new Date(17, mois, jour, heure, minutes);
+
 	}
 	
 	
@@ -113,6 +119,14 @@ public class Trajet {
 
 	public int getId() {
 		return id;
+	}
+	
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public List<Reservation> getDemandes() {

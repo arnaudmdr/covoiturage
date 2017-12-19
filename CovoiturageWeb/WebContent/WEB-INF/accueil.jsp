@@ -8,6 +8,17 @@
 <title>Covoiturage</title>
 </head>
 <body>
+
+
+<c:if test="${not empty demandeErreur}">
+    ${demandeErreur}
+</c:if>
+
+<c:if test="${not empty reservationEffectuee}">
+    ${reservationEffectuee}
+</c:if>
+
+
 <form method="post"> 
 	<h1>Liste de demandes</h1>
 	<ul>
@@ -17,6 +28,12 @@
 						${t.villeDepart.nom} -> ${t.villeArrivee.nom} </br>
 						
 						${d.utilisateur.username} : ${d.villeArrivee.nom} : ${d.placesReservees}
+						
+						<p>
+							<button type="submit" name="accepter" value="${d.id}">Accepter</button>
+							<button type="submit" name="refuser" value="${d.id}">Refuser</button>
+						</p>
+						
 					</li>		
 				</c:forEach>
 		</c:forEach>
@@ -29,7 +46,8 @@
 	<ul>
 		<c:forEach items="${listeTrajets}" var="t">
 			<li> ${t.villeDepart.nom} -> ${t.villeArrivee.nom} tarif : ${t.tarif} </br>
-			Nombre de places restantes : ${t.nombrePlaces}		
+			Nombre de places restantes : ${t.nombrePlaces}	
+			Date de départ : Le ${t.date.date}/${t.date.month} à ${t.date.hours}h${t.date.minutes}
 			</li>
 			<button type="submit" name="reserver" value="${t.id}">Réserver le trajet</button>
 		</c:forEach>

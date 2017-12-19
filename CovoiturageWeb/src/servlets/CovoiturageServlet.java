@@ -93,7 +93,13 @@ public class CovoiturageServlet extends HttpServlet {
 			//Nombre de places à reserver
 			int nombrePlaces = Integer.parseInt(request.getParameter(validerReservation));
 			String villeArrivee = request.getParameter("villearrivee");
-			facade.envoyerDemande(currentLogin, idTrajet, nombrePlaces, villeArrivee);		
+			
+			if (!(facade.envoyerDemande(currentLogin, idTrajet, nombrePlaces, villeArrivee))){
+				request.setAttribute("demandeErreur","Reservation impossible : pas assez de place");
+			} else {
+				request.setAttribute("reservationEffectuee","Demande effectuée");
+			}
+					
 		}
 
 		
@@ -107,6 +113,22 @@ public class CovoiturageServlet extends HttpServlet {
 			default:
 				break;
 			}
+		}
+		
+		
+		//Traitement des demandes (cas acceptation ou refus)
+		String accepter = request.getParameter("accepter");
+		String refuser = request.getParameter("refuser");
+		
+		if (accepter!=null) {
+			//cas acceptation de la demande
+			int idDemande = Integer.parseInt(accepter);
+			facade.reserverTrajet(idDemande);
+		}
+		if (refuser!=null) {
+			//cas refus de la demande
+			int idDemande = Integer.parseInt(refuser);
+			facade.refuserDemande(idDemande);
 		}
 		
 		generateListeTrajets(request, response, currentLogin);
@@ -134,7 +156,9 @@ public class CovoiturageServlet extends HttpServlet {
 		if ( !request.getParameter("tarif").isEmpty() ) {
 			facade.addTrajet(currentLogin, request.getParameter("villedepart"), request.getParameter("villearrivee"),
 					Integer.parseInt(request.getParameter("nombreplaces")), request.getParameter("typevoiture"),
-					Integer.parseInt(request.getParameter("tarif")), etapes);
+					Integer.parseInt(request.getParameter("tarif")), etapes, Integer.parseInt(request.getParameter("jour")),
+					Integer.parseInt(request.getParameter("mois")), Integer.parseInt(request.getParameter("heure")),
+					Integer.parseInt(request.getParameter("minutes")));
 		}
 	}
 	

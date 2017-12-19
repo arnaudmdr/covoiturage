@@ -1,6 +1,7 @@
 package ejbs;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,18 @@ public class Facade {
 		
 		//Recup liste trajets
 		public List<Trajet> getListeTrajets() {
-			Query q = em.createQuery("From Trajet t");			
-			return q.getResultList();
+			Query q = em.createQuery("From Trajet t");
+			List<Trajet> listeNonSorted = q.getResultList();
+			
+			if (listeNonSorted.size()>1) {
+				listeNonSorted.sort(new Comparator<Trajet>(){
+					@Override
+					public int compare(Trajet t1, Trajet t2) {
+						return t1.getDate().compareTo(t2.getDate()) < 0 ? -1 : (t1.getDate().compareTo(t2.getDate())) > 0 ? 1 : 0;
+					}
+				});
+			}
+			return listeNonSorted; 
 		}
 		
 		
@@ -48,7 +59,7 @@ public class Facade {
 		
 
 		//Fonction pour proposer un nouveau trajet
-		public void addTrajet(String username, String villedepart, String villearrivee, int nombreplaces, String typevoiture, int tarif, Map<String, Integer> etapes) {
+		public void addTrajet(String username, String villedepart, String villearrivee, int nombreplaces, String typevoiture, int tarif, Map<String, Integer> etapes, int jour, int mois, int heure, int minutes) {
 			
 			// ordre pour addTrajet : 
 			// Ville villedepart, Ville villearrivee, int id, int nombreplaces, String typevoiture, int tarif
@@ -82,7 +93,7 @@ public class Facade {
 			}
 			
 			//On ajoute dans la base
-			Trajet t = new Trajet(u, vd, va, max+1, nombreplaces, typevoiture, tarif);
+			Trajet t = new Trajet(u, vd, va, max+1, nombreplaces, typevoiture, tarif, jour, mois, heure, minutes);
 			t.setEtapes(etapesVilles);
 			
 			Trajet trajet_attach = em.merge(t); //Il faut synchroniser dans la base l'entity détachée
@@ -95,39 +106,35 @@ public class Facade {
 			return (Trajet) q.getSingleResult();	
 		}
 		
-		public boolean reserverTrajet(String username, int trajetId, int nombrePlaces, String villeArrivee) {
-			Trajet t = getTrajet(trajetId);
+		public boolean reserverTrajet(int idDemande) {
 			
-			//User
-			Utilisateur user = em.find(Utilisateur.class, username);
-					
-			//Ville arrivée
-			Query q2 = em.createQuery("From Ville v where v.nom=:nomvillearrivee");
-			q2.setParameter("nomvillearrivee", villeArrivee);
-			Ville va = (Ville) q2.getSingleResult();
+			//Récupération de la demande :
+			Query q = em.createQuery("From Reservation r where r.id=:id");
+			q.setParameter("id", idDemande);	
+			Reservation r = (Reservation) q.getSingleResult();
 			
-			
+			Trajet t = r.getTrajet();
 			
 			//Modification nb places
 			int nPlaces = t.getNombrePlaces();
 			
 			//Erreur on veut reserver + de places qu'il y en a
-			if (nPlaces < nombrePlaces) {
+			if (nPlaces < r.getPlacesReservees()) {
 				return false;
 			} else {
 				//Nv nombre de places
-				t.setNombrePlaces(nPlaces-nombrePlaces);
+				t.setNombrePlaces(nPlaces-r.getPlacesReservees());
+				
+				//On remove la reservation de la liste des demandes
+				List<Reservation> demandes = t.getDemandes();
+				demandes.remove(r);
+				t.setDemandes(demandes);
 				
 				//Mise a jour de la HM des passagers
 				List<Reservation> reservations = t.getReservations();
+				reservations.add(r);
+				t.setReservations(reservations);
 				
-				//Creation de reservation correspondant au passager et sauv ds la base
-				Reservation r = new Reservation(user,nombrePlaces,va);				
-				Reservation rAttach = em.merge(r);			
-				
-				reservations.add(rAttach);
-				
-				t.setReservations(reservations);											
 				return true;
 			}		
 		}
@@ -143,8 +150,6 @@ public class Facade {
 			q2.setParameter("nomvillearrivee", villeArrivee);
 			Ville va = (Ville) q2.getSingleResult();
 			
-			
-			
 			//Modification nb places
 			int nPlaces = t.getNombrePlaces();
 			
@@ -156,14 +161,31 @@ public class Facade {
 				List<Reservation> demandes = t.getDemandes();
 				
 				//Creation de reservation correspondant au passager et sauv ds la base
-				Reservation r = new Reservation(user,nombrePlaces,va);				
+				Reservation r = new Reservation(user,nombrePlaces,va);	
+				
+				r.setTrajet(t);
+				
 				Reservation rAttach = em.merge(r);			
 				
 				demandes.add(rAttach);
 				
-				t.setReservations(demandes);											
+				t.setDemandes(demandes);										
 				return true;
 			}		
+		}
+		
+		public void refuserDemande(int idDemande) {
+			
+			Query q = em.createQuery("From Reservation r where r.id=:id");
+			q.setParameter("id", idDemande);	
+			Reservation r = (Reservation) q.getSingleResult();
+			
+			Trajet t = r.getTrajet();
+			
+			//On remove la reservation de la liste des demandes
+			List<Reservation> demandes = t.getDemandes();
+			demandes.remove(r);
+			t.setDemandes(demandes);
 		}
 		
 		

@@ -20,9 +20,19 @@ public class Reservation {
 	@ManyToOne
 	private Ville villeArrivee;
 	
+	@ManyToOne
+	private Trajet trajet;
 	
-	
-	
+	public Trajet getTrajet() {
+		return trajet;
+	}
+
+
+	public void setTrajet(Trajet trajet) {
+		this.trajet = trajet;
+	}
+
+
 	public Reservation() {
 		
 	}
