@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -239,5 +240,25 @@ public class Facade {
 		
 	
 		
+
+		public Map<Reservation,Trajet> getTrajetsPassager(String username) {
+			
+			//User
+			Utilisateur passager = em.find(Utilisateur.class, username);
+			//Trajets en tant que conducteur
+			Query q = em.createQuery("From Trajet t");
+			List<Trajet> trajets = q.getResultList();
+			
+			Map<Reservation,Trajet> trajetsPassager = new HashMap<Reservation,Trajet>();
+			for (Trajet trajet : trajets) {
+				List<Reservation> reservations = trajet.getReservations();			
+				for (Reservation reservation : reservations) {
+					if (reservation.getUtilisateur().getUsername()==passager.getUsername()) {
+						trajetsPassager.put(reservation,trajet);
+					}
+				}
+			}
+			return trajetsPassager;
+		}	
 		
 }
