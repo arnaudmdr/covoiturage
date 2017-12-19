@@ -49,54 +49,61 @@ public class CovoiturageServlet extends HttpServlet {
 						//si admin, on dispatch sur la jsp correspondante
 						generateAdmin(request, response);
 						return;
+					}else {
+						request.getSession().setAttribute("username", login);
+						generateListeTrajets(request, response, login);
+						return;
 					}
-					request.getSession().setAttribute("username", login);
-					generateListeTrajets(request, response, login);
-					return;
 				}
 			}
-			
+			System.out.println("Je passe");
+			List<Trajet> test = facade.getListeTrajets();
+			System.out.println(test);
 			//sinon on renvoie sur la page de connexion
+			request.setAttribute("listeTrajetAnonyme", facade.getListeTrajets());
 			request.getRequestDispatcher("/WEB-INF/connexion.jsp").forward(request, response);
-				
 			return;
 		}
 		
 		
 		//*******************************************************************************
 		//Cas où on est admin
-		if (currentLogin.equals("admin")) {
+		String deconnexion = request.getParameter("deconnexion");
 			
-			String action = request.getParameter("admin");
-			if (action!=null) {
-				switch (action) {
-				case "ajouterville":
-					//On peut ajouter des villes 
-					if (request.getParameter("newville")!=null)
-					{
-						String newville = request.getParameter("newville");
-						facade.addVille(newville);
-						generateAdmin(request, response);
-						//facade.addville(newville);
-					}
-					break;
-				case "ajoutergabarit":
-					if (request.getParameter("newgabarit")!=null)
-					{
-						//On peut aussi ajouter des nouveaux gabarits de véhicules
-						String newgabarit = request.getParameter("newgabarit");
-						facade.addGabarit(newgabarit);
-						generateAdmin(request, response);
-						//facade.addGabarit(newgabarit);
-					}
-					break;
-				default:
-					break;
-				}	
-			}
-			
+		if (deconnexion!=null) {
+			request.getSession().setAttribute("username", "");
+			request.setAttribute("listeTrajetAnonyme", facade.getListeTrajets());
+			request.getRequestDispatcher("/WEB-INF/connexion.jsp").forward(request, response);
+		}
+		
+		String action = request.getParameter("admin");
+		if (action!=null) {
+			switch (action) {				
+			case "ajouterville":
+				//On peut ajouter des villes 
+				if (request.getParameter("newville")!=null)
+				{
+					String newville = request.getParameter("newville");
+					facade.addVille(newville);
+					generateAdmin(request, response);
+				}
+				break;
+			case "ajoutergabarit":
+				if (request.getParameter("newgabarit")!=null)
+				{
+					//On peut aussi ajouter des nouveaux gabarits de véhicules
+					String newgabarit = request.getParameter("newgabarit");
+					facade.addGabarit(newgabarit);
+					generateAdmin(request, response);
+					
+				}
+				break;
+			default:
+				break;
+			}	
 			return;
 		}
+		
 		//*******************************************************************************
 		
 		
@@ -113,6 +120,7 @@ public class CovoiturageServlet extends HttpServlet {
 				break;
 			case "deconnexion":
 				request.getSession().setAttribute("username", "");
+				request.setAttribute("listeTrajetAnonyme", facade.getListeTrajets());
 				request.getRequestDispatcher("/WEB-INF/connexion.jsp").forward(request, response);
 				break;	
 				
@@ -215,11 +223,8 @@ public class CovoiturageServlet extends HttpServlet {
 	private void generateListeTrajets(HttpServletRequest request, HttpServletResponse response, String username) throws ServletException, IOException {
 		request.setAttribute("listeTrajetsConducteur", facade.getTrajetsConducteur(username));
 		request.setAttribute("listeTrajetsPassager", facade.getTrajetsPassager(username));
-		
 		request.setAttribute("listeTrajets", facade.getListeTrajets());
-		
 		request.setAttribute("username", username);
-		
 		request.getRequestDispatcher("WEB-INF/accueil.jsp").forward(request, response);
 	}
 

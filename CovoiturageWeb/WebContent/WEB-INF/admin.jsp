@@ -9,6 +9,10 @@
 </head>
 <body>
 
+<form method="post"> 
+	<button type="submit" name="todo" value="deconnexion">Déconnexion</button>
+</form>
+
 <p>
 Villes du système : 
 <ul>
