@@ -52,7 +52,14 @@
 	<c:forEach items="${listeTrajetsConducteur}" var="t">
 			
 		<li>
-			${t.villeDepart.nom} -> ${t.villeArrivee.nom} </br>						
+			${t.villeDepart.nom} -> ${t.villeArrivee.nom} </br>	
+			Départ : Le ${t.date.date}/${t.date.month} à ${t.date.hours}h${t.date.minutes} </br>
+			Etapes : </br>
+			<c:forEach items="${t.etapes}" var="entry">
+    			- ${entry.key.nom}<br>
+			</c:forEach>	
+			Nombre de places restantes : ${t.nombrePlaces} </br>	
+			</br>					
 		</li>		
 	</c:forEach>
 </ul>
@@ -63,9 +70,13 @@
 	<c:forEach items="${listeTrajetsPassager}" var="entry">
 		<li>
 			${entry.value.villeDepart.nom} -> ${entry.key.villeArrivee.nom} </br>
-			Nombre de places reservees : ${entry.key.placesReservees} </br>
-			
-    	</li>
+			Départ : Le ${entry.value.date.date}/${entry.value.date.month} à ${entry.value.date.hours}h${entry.value.date.minutes} </br>
+			Nombre de places reservées : ${entry.key.placesReservees} </br>
+			Tarif une place pour ${entry.key.villeArrivee.nom} : ${entry.value.etapes[entry.key.villeArrivee]}€ </br>
+			Tarif total : ${entry.key.placesReservees*entry.value.etapes[entry.key.villeArrivee]}€ </br>
+			Conducteur : ${entry.value.conducteur.username}</br>
+			</br>
+    	</li>	
 	</c:forEach>
 	
 </ul>
@@ -78,16 +89,17 @@
 		<c:forEach items="${listeTrajets}" var="t">
 			<li> ${t.villeDepart.nom} -> ${t.villeArrivee.nom} tarif : ${t.tarif}€ </br>
 			Nombre de places restantes : ${t.nombrePlaces} </br>
-			Date de départ : Le ${t.date.date}/${t.date.month} à ${t.date.hours}h${t.date.minutes} </br>
+			Départ : Le ${t.date.date}/${t.date.month} à ${t.date.hours}h${t.date.minutes} </br>
 			Etapes : </br>
 			<c:forEach items="${t.etapes}" var="entry">
-    			${entry.key.nom}, Tarif : ${entry.value}€<br>
+    			- ${entry.key.nom}, Tarif : ${entry.value}€<br>
 			</c:forEach>
 			Conducteur : ${t.conducteur.username} </br>
 			Type de voiture : ${t.typeVoiture} </br>		
 			</li>
 			</br>
 			<button type="submit" name="reserver" value="${t.id}">Réserver le trajet</button>
+			</br>
 		</c:forEach>
 	</ul>
 </form>
