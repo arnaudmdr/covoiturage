@@ -4,6 +4,9 @@
 Cette application a été réalisée dans le cadre d'un projet scolaire à l'INSA. Elle propose de simuler un site de covoiturage, en excluant les transactions financières.
 
 ## Comment utiliser?
+
+Le site est accessible à l'adresse : localhost:port/CovoiturageWeb/
+
 Il existe 5 utilisateurs enregistrés :
 - admin/admin : administrateur
 - marie/marie : voyageur
@@ -43,7 +46,7 @@ L'utilisateur va :
 - La date de départ (jour - mois - heure - minutes)
 - Si il y en a, les étapes (Ville - tarif associé à l'étape)
 
-### Précisions sur la réservation de trajet :
+#### Précisions sur la réservation de trajet :
 Lors de la réservation d'un trajet, l'utilisateur va : 
 - Selectionner sa ville d'arrivée (soit terminus ou étape)
 - Le nombre de places qu'il veut réserver
@@ -51,3 +54,7 @@ Lors de la réservation d'un trajet, l'utilisateur va :
 Après avoir validé, une demande est envoyée au conducteur du trajet. La requète échoue si le nombre de places demandé est supérieur au nombre de places libres dans le trajet.
 
 La demande apparaîtra sur l'écran d'accueil du conducteur, qui choisira, ou non, d'accepter la demande. Si la demande est acceptée, l'utilisateur sera ajouter à la liste des passagers.
+
+## Modèle de l'application
+
+![alt text](https://github.com/arnaudmdr/covoiturage/modele_appli.png "Modèle")
