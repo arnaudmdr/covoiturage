@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Page de l'administrateur</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -14,7 +15,7 @@
 </form>
 
 <p>
-Villes du système : 
+<h3>Villes du système : </h3>
 <ul>
 	<c:forEach items="${listeVilles}" var="v">
 		<li> ${v.nom} </li>
@@ -29,7 +30,7 @@ Ajouter une ville dans le système :
 </p>
 
 <p>
-Gabarits du système : 
+<h3>Gabarits du système : </h3>
 <ul>
 	<c:forEach items="${listeGabarits}" var="g">
 		<li> ${g} </li>

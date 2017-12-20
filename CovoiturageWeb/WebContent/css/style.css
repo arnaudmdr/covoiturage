@@ -27,9 +27,7 @@ h3 {
 	font-weight : bold;
 }
 form input {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  
   outline: 0;
   border: 1px solid rgba(255, 255, 255, 0.4);
   background-color: rgba(255, 255, 255, 0.2);
@@ -37,7 +35,6 @@ form input {
   border-radius: 3px;
   padding: 10px 15px;
   margin: 0 auto 10px auto;
-  display: block;
   text-align: center;
   font-size: 18px;
   color: black;
