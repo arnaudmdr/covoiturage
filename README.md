@@ -57,4 +57,4 @@ La demande apparaîtra sur l'écran d'accueil du conducteur, qui choisira, ou no
 
 ## Modèle de l'application
 
-![alt text](https://github.com/arnaudmdr/covoiturage/modele_appli.png "Modèle")
+![alt text](https://github.com/arnaudmdr/covoiturage/blob/master/modele_appli.png "Modèle")
