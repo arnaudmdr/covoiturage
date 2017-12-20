@@ -58,3 +58,8 @@ La demande apparaîtra sur l'écran d'accueil du conducteur, qui choisira, ou no
 ## Modèle de l'application
 
 ![alt text](https://github.com/arnaudmdr/covoiturage/blob/master/modele_appli.png "Modèle")
+
+## Notes
+
+- Testé sous wildfly 10.1.0
+- Penser à ajouter le projet "CovoiturageEJB" dans Properties/Deployment Assembly et Properties/Java Build Path/Projects de "CovoiturageWeb" avant de déployer la solution sur le serveur.
