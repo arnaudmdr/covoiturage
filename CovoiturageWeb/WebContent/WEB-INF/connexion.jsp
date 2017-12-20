@@ -6,33 +6,45 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Connexion</title>
+<link rel="stylesheet" href="css/style.css">
+
+
+
+
 </head>
 <body>
 
-<form method="post">
-	Username : <input type="text" name="username"/>
-	Password : <input type="text" name="password"/>
-	<button type="submit" name="todo" value="connect">Se connecter</button>
-</form>
+ <div class="wrapper">
+	<div class="container">
 
-<h1>Liste des trajets disponibles</h1>
-<ul>
-	<c:forEach items="${listeTrajetAnonyme}" var="t">
-		<li> ${t.villeDepart.nom} -> ${t.villeArrivee.nom} tarif : ${t.tarif}€ </br>
-		Nombre de places restantes : ${t.nombrePlaces} </br>
-		Départ : Le ${t.date.date}/${t.date.month} à ${t.date.hours}h${t.date.minutes} </br>
-		Etapes : </br>
-		<c:forEach items="${t.etapes}" var="entry">
-   			- ${entry.key.nom}, Tarif : ${entry.value}€<br>
+	<form method="post" class="form">
+		Username : <input type="text" name="username"/>
+		Password : <input type="text" name="password"/>
+		<button type="submit" id="login-button" name="todo" value="connect">Se connecter</button>
+	</form>
+	</div>
+
+</div>
+
+<form>
+	<h3>Liste des trajets disponibles</h3>
+	<ul>
+		<c:forEach items="${listeTrajetAnonyme}" var="t">
+			<li> <h4> <img src="car.svg" alt="Car">  ${t.villeDepart.nom} -> ${t.villeArrivee.nom}</h4>
+				<B> Tarif :  </B> ${t.tarif}€ </br>
+				<B>Nombre de places restantes : </B> ${t.nombrePlaces} </br>
+				<B>Départ : </B> Le ${t.date.date}/${t.date.month} à ${t.date.hours}h${t.date.minutes} </br>
+				<B>Etapes : </B> </br>
+				<c:forEach items="${t.etapes}" var="entry">
+		   			- ${entry.key.nom}, Tarif : ${entry.value}€<br>
+				</c:forEach>
+				<B>Conducteur : </B> ${t.conducteur.username} </br>
+				<B>Type de voiture :  </B> ${t.typeVoiture} </br>		
+			</li>
+			</br>
 		</c:forEach>
-		Conducteur : ${t.conducteur.username} </br>
-		Type de voiture : ${t.typeVoiture} </br>		
-		</li>
-		</br>
-	</c:forEach>
-</ul>
-
-
+	</ul>
+</form>
 
 </body>
 </html>
